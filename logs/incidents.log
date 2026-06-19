@@ -1,0 +1,18 @@
+[2026-06-19T15:55:26.114Z] [INCIDENT] Method: GET | URL: /dashboard | IP: ::ffff:127.0.0.1 | User: Guest | Error: Cannot read properties of undefined (reading 'indexOf')
+Stack: TypeError: Cannot read properties of undefined (reading 'indexOf')
+    at indexOf (E:\Mes projets\Mes projets professionnels\qualite-logiciel\src\middlewares\authMiddleware.js:8:39)
+    at Layer.handle [as handle_request] (E:\Mes projets\Mes projets professionnels\qualite-logiciel\node_modules\express\lib\router\layer.js:95:5)
+    at next (E:\Mes projets\Mes projets professionnels\qualite-logiciel\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (E:\Mes projets\Mes projets professionnels\qualite-logiciel\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (E:\Mes projets\Mes projets professionnels\qualite-logiciel\node_modules\express\lib\router\layer.js:95:5)
+    at E:\Mes projets\Mes projets professionnels\qualite-logiciel\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (E:\Mes projets\Mes projets professionnels\qualite-logiciel\node_modules\express\lib\router\index.js:346:12)
+    at next (E:\Mes projets\Mes projets professionnels\qualite-logiciel\node_modules\express\lib\router\index.js:280:10)
+    at SendStream.error (E:\Mes projets\Mes projets professionnels\qualite-logiciel\node_modules\serve-static\index.js:121:7)
+    at SendStream.emit (node:events:519:28)
+    at SendStream.error (E:\Mes projets\Mes projets professionnels\qualite-logiciel\node_modules\send\index.js:270:17)
+    at SendStream.onStatError (E:\Mes projets\Mes projets professionnels\qualite-logiciel\node_modules\send\index.js:417:12)
+    at next (E:\Mes projets\Mes projets professionnels\qualite-logiciel\node_modules\send\index.js:730:16)
+    at onstat (E:\Mes projets\Mes projets professionnels\qualite-logiciel\node_modules\send\index.js:719:14)
+    at FSReqCallback.oncomplete (node:fs:197:21)
+

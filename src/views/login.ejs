@@ -1,0 +1,296 @@
+<%- include('partials/header') %>
+
+<div class="auth-wrapper">
+  <div class="auth-card">
+    <div class="tabs-header">
+      <button class="tab-btn <%= (locals.activeTab !== 'register') ? 'active' : '' %>" onclick="switchTab('login')" id="tab-login-btn">Connexion</button>
+      <button class="tab-btn <%= (locals.activeTab === 'register') ? 'active' : '' %>" onclick="switchTab('register')" id="tab-register-btn">Inscription</button>
+    </div>
+
+    <!-- Alertes -->
+    <% if (locals.error) { %>
+      <div class="alert alert-danger" id="error-alert">
+        <i class="fa-solid fa-triangle-exclamation"></i> <%= error %>
+      </div>
+    <% } %>
+    <% if (locals.success) { %>
+      <div class="alert alert-success" id="success-alert">
+        <i class="fa-solid fa-circle-check"></i> <%= success %>
+      </div>
+    <% } %>
+
+    <!-- Formulaire de Connexion -->
+    <form action="/login" method="POST" id="login-form" class="auth-form <%= (locals.activeTab !== 'register') ? 'active' : '' %>">
+      <h2>Ravi de vous revoir</h2>
+      <p class="subtitle">Connectez-vous pour accéder à votre espace bibliothèque</p>
+      
+      <div class="form-group">
+        <label for="login-username">Nom d'utilisateur</label>
+        <div class="input-wrapper">
+          <i class="fa-solid fa-user"></i>
+          <input type="text" name="username" id="login-username" placeholder="Entrez votre nom d'utilisateur" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="login-password">Mot de passe</label>
+        <div class="input-wrapper">
+          <i class="fa-solid fa-lock"></i>
+          <input type="password" name="password" id="login-password" placeholder="••••••••" required>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary" id="login-submit-btn">
+        <i class="fa-solid fa-sign-in-alt"></i> Se connecter
+      </button>
+    </form>
+
+    <!-- Formulaire d'Inscription -->
+    <form action="/register" method="POST" id="register-form" class="auth-form <%= (locals.activeTab === 'register') ? 'active' : '' %>">
+      <h2>Créer un compte</h2>
+      <p class="subtitle">Enregistrez-vous pour pouvoir emprunter des livres</p>
+      
+      <div class="form-group">
+        <label for="register-username">Nom d'utilisateur</label>
+        <div class="input-wrapper">
+          <i class="fa-solid fa-user"></i>
+          <input type="text" name="username" id="register-username" placeholder="3 caractères minimum" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="register-password">Mot de passe</label>
+        <div class="input-wrapper">
+          <i class="fa-solid fa-lock"></i>
+          <input type="password" name="password" id="register-password" placeholder="6 caractères minimum" required>
+        </div>
+      </div>
+
+      <!-- Option de rôle si connecté comme admin (création de compte personnel) -->
+      <% if (locals.user && user.role === 'admin') { %>
+        <div class="form-group">
+          <label for="register-role">Rôle (Admin uniquement)</label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-users-gear"></i>
+            <select name="role" id="register-role">
+              <option value="lecteur">Lecteur</option>
+              <option value="bibliothecaire">Bibliothécaire</option>
+              <option value="admin">Administrateur</option>
+            </select>
+          </div>
+        </div>
+      <% } %>
+
+      <button type="submit" class="btn btn-primary" id="register-submit-btn">
+        <i class="fa-solid fa-user-plus"></i> Créer mon compte
+      </button>
+    </form>
+  </div>
+</div>
+
+<style>
+  .auth-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem 0;
+  }
+
+  .auth-card {
+    background: var(--panel-bg);
+    border: 1px solid var(--panel-border);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    padding: 2.5rem;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 480px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 
+                0 0 40px rgba(99, 102, 241, 0.1);
+  }
+
+  .tabs-header {
+    display: flex;
+    background: rgba(15, 23, 42, 0.5);
+    border-radius: 10px;
+    padding: 0.3rem;
+    margin-bottom: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .tab-btn {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    padding: 0.75rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.3s;
+  }
+
+  .tab-btn.active {
+    background: var(--primary);
+    color: #fff;
+    box-shadow: 0 0 15px var(--primary-glow);
+  }
+
+  .auth-form {
+    display: none;
+  }
+
+  .auth-form.active {
+    display: block;
+    animation: fadeIn 0.4s ease-out;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  h2 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+  }
+
+  .subtitle {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 1.8rem;
+  }
+
+  .form-group {
+    margin-bottom: 1.4rem;
+  }
+
+  label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #c7d2fe;
+    margin-bottom: 0.4rem;
+  }
+
+  .input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .input-wrapper i {
+    position: absolute;
+    left: 1rem;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+  }
+
+  .input-wrapper input, .input-wrapper select {
+    width: 100%;
+    background: rgba(15, 23, 42, 0.4);
+    border: 1px solid var(--panel-border);
+    color: #fff;
+    padding: 0.75rem 1rem 0.75rem 2.6rem;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    transition: all 0.3s;
+  }
+
+  .input-wrapper select {
+    appearance: none;
+    -webkit-appearance: none;
+  }
+
+  .input-wrapper input:focus, .input-wrapper select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 10px rgba(99, 102, 241, 0.2);
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 0.8rem;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .btn-primary {
+    background: var(--primary);
+    border: none;
+    color: #fff;
+    box-shadow: 0 4px 15px var(--primary-glow);
+  }
+
+  .btn-primary:hover {
+    background: var(--primary-hover);
+    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
+  }
+
+  .alert {
+    padding: 0.8rem 1rem;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    animation: slideDown 0.3s ease-out;
+  }
+
+  .alert-danger {
+    background: rgba(239, 68, 68, 0.15);
+    border: 1px solid rgba(239, 68, 68, 0.25);
+    color: #fca5a5;
+  }
+
+  .alert-success {
+    background: rgba(16, 185, 129, 0.15);
+    border: 1px solid rgba(16, 185, 129, 0.25);
+    color: #a7f3d0;
+  }
+
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+
+<script>
+  function switchTab(tab) {
+    const loginForm = document.getElementById('login-form');
+    const registerForm = document.getElementById('register-form');
+    const tabLogin = document.getElementById('tab-login-btn');
+    const tabRegister = document.getElementById('tab-register-btn');
+    
+    // Masquer les alertes lors du changement d'onglet
+    const errorAlert = document.getElementById('error-alert');
+    const successAlert = document.getElementById('success-alert');
+    if (errorAlert) errorAlert.style.display = 'none';
+    if (successAlert) successAlert.style.display = 'none';
+
+    if (tab === 'login') {
+      loginForm.classList.add('active');
+      registerForm.classList.remove('active');
+      tabLogin.classList.add('active');
+      tabRegister.classList.remove('active');
+    } else {
+      registerForm.classList.add('active');
+      loginForm.classList.remove('active');
+      tabRegister.classList.add('active');
+      tabLogin.classList.remove('active');
+    }
+  }
+</script>
+
+<%- include('partials/footer') %>
